@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Prata&display=swap');
+
+body {
+  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+  color: #4c5361;
+  padding: 0;
+  border: 0;
+  user-select: none;
+}
+
+h1,
+p,
+button,
+select,
+option {
+  font-family: 'Prata', serif;
+  color: #454c5a;
+}
+
+.prata-regular {
+  font-family: 'Prata', serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-inline: 10%;
+  text-align: center;
+}
+
+.result {
+  font-size: 14px;
+  line-height: 1;
+  white-space: pre;
+  overflow: auto;
+  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+  resize: none;
+  margin-bottom: 1em;
+  padding: 25px;
+  width: 100%;
+  user-select: all;
+}
+
+#textarea-input {
+  border-radius: 10px;
+  border: 1px solid #d4d4d4;
+  padding: 20px;
+  margin-inline: 10%;
+  width: 70%;
+}
+
+#textarea-output {
+  border-radius: 10px;
+  border: 1px solid #d4d4d4;
+  padding: 20px;
+  margin-inline: 10%;
+  width: 88%;
+}
+
+.asci-header {
+  font-size: 3em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.asci-sub-header {
+  font-size: 1.21em;
+}
+
+.get-form-btn {
+  display: inline-block;
+}
+
+.center-space-between {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+  gap: 10px;
+}
+
+#black-underline {
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+}
+
+button,
+select,
+option {
+  border-radius: 10px;
+  border: 1px solid rgb(187, 187, 187);
+  padding: 10px;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+button:hover {
+  background-color: rgb(229, 228, 228);
+  color: rgb(74, 74, 74);
+}
+
+.center-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  width: 100%;
+}
+.input-form {
+  width: 100vw;
+}
+
+/* @media (width >= 40rem) {
+  font-size: 200;
+} */
