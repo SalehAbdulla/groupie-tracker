@@ -1,6 +1,7 @@
 package app
 
 import (
+	"groupie-tracker/internal/constants"
 	"groupie-tracker/internal/handlers"
 	"net/http"
 )
@@ -9,14 +10,18 @@ type App struct {
 	port          string
 	templatesPath string
 	mux           *http.ServeMux
+	data          constants.ArtistData
 }
 
-func New(port, templatesPath string) (*App, error) {
+func New(port string) (*App, error) {
+	FetchedData, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {return nil, err}
 
 	app := &App{
 		port:          port,
-		templatesPath: templatesPath,
+		templatesPath: constants.TEMPLATES_PATH,
 		mux:           http.NewServeMux(),
+		data: FetchedData,
 	}
 
 	app.routes()
@@ -40,8 +45,6 @@ func (app *App) routes() {
 	h := handlers.New(app.templatesPath)
 
 	app.mux.HandleFunc("/", h.Home)
-	app.mux.HandleFunc("/ascii-art", h.AsciiArt)
-	app.mux.HandleFunc("/reset", h.Reset)
 
 	fileServer := http.StripPrefix("/templates/", http.FileServer(http.Dir(app.templatesPath)))
 
@@ -53,4 +56,3 @@ func (app *App) routes() {
 		fileServer.ServeHTTP(w, r)
 	})
 }
-

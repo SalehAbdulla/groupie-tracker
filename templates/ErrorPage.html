@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/templates/home.css">
+    <title>Error</title>
+</head>
+<body class="error">
+    <main>
+        {{if .Error}}
+        <div class="prata-regular">{{.Error}}</div>
+        {{end}}
+    </main>
+</body>
+</html>

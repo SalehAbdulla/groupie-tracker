@@ -9,58 +9,35 @@
   <body>
 
     <div class="main">
-    <h1 class="asci-header prata-regular">ASCII Art Generator</h1>
-    <p class="asci-sub-header prata-regular">Website that converts text into <span id="black-underline">ASCII Art!</span> </p>
+
+    <h1 class="asci-header prata-regular">Groupie Tracker</h1>
 
     {{if .Error}}
     <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Error}}</div>
     {{end}}
-      <form method="POST" action="/ascii-art" class="input-form">
-        <div class="input-row">
-          <textarea
-          id="textarea-input"
-          required
-          type="text"
-          name="userInput"
-          placeholder="Type your text here..."
-          value="{{.Input}}"
-          autocomplete="off"
-          rows="12"
-          maxlength="400"
-        >{{if .Input}}{{.Input}}{{end}}</textarea>
-        <br />
+      {{if .Name}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Name}}</div>
+    {{end}}
+        {{if .Members}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Members}}</div>
+    {{end}}
+        {{if .CreationDate}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.CreationDate}}</div>
+    {{end}}
+        {{if .FirstAlbum}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.FirstAlbum}}</div>
+    {{end}}
+        {{if .Locations}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Locations}}</div>
+    {{end}}
+        {{if .ConcertDates}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.ConcertDates}}</div>
+    {{end}}
+        {{if .Relations}}
+    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Relations}}</div>
+    {{end}}
 
-      <div class="center-space-between">
-
-        <select name="font" class="">
-          <option value="standard">
-            STANDARD
-          </option>
-          <option value="shadow">
-            SHADOW
-          </option>
-          <option
-          value="thinkertoy"
-          >
-          THINKTORY
-        </option>
-      </select>
-
-          <button type="submit" class="get-form-btn">SUBMIT</button>
-        </div>
-        
-      </div>
-    </form>
-    
-    
-    <div class="center-col">
-      <textarea id="textarea-output" rows="20" readonly class="result" wrap="off" disabled>{{if .Output}}{{.Output}}{{end}}</textarea>
-      <form action="/reset" method="post" class=""><button type="submit">CLEAR</button></form>
-  </div>
-  
     </div>
-
-
 
 </body>
 </html>
