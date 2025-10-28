@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/json"
 	"groupie-tracker/internal/constants"
 	"groupie-tracker/internal/handlers"
 	"net/http"
@@ -14,14 +15,22 @@ type App struct {
 }
 
 func New(port string) (*App, error) {
-	FetchedData, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
-	if err != nil {return nil, err}
+	resp, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var data constants.ArtistData
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return nil, err
+	}
 
 	app := &App{
 		port:          port,
 		templatesPath: constants.TEMPLATES_PATH,
 		mux:           http.NewServeMux(),
-		data: FetchedData,
+		data:          data,
 	}
 
 	app.routes()
@@ -29,6 +38,7 @@ func New(port string) (*App, error) {
 }
 
 func (app *App) GetPort() string { return app.port }
+func (app *App) GetData() constants.ArtistData { return app.data }
 
 func (app *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	_, pattern := app.mux.Handler(r)
