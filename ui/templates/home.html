@@ -1,39 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ASCII Art Generator</title>
-    <link rel="stylesheet" href="/templates/home.css" />
-  </head>
-  <body>
-
-    <div class="main">
-
-    <h1 class="asci-header prata-regular">Groupie Tracker</h1>
-      {{if .Name}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Name}}</div>
-    {{end}}
-        {{if .Members}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Members}}</div>
-    {{end}}
-        {{if .CreationDate}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.CreationDate}}</div>
-    {{end}}
-        {{if .FirstAlbum}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.FirstAlbum}}</div>
-    {{end}}
-        {{if .Locations}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Locations}}</div>
-    {{end}}
-        {{if .ConcertDates}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.ConcertDates}}</div>
-    {{end}}
-        {{if .Relations}}
-    <div class="error" style="color: red; text-decoration: underline; margin-bottom: 10px;">{{.Relations}}</div>
-    {{end}}
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <section class="grid">
+  {{range .Artists}}
+  <article class="card">
+    <img class="card-img" src="{{.Image}}" alt="{{.Name}}">
+    <div class="card-body">
+      <h2 class="card-title">{{.Name}}</h2>
+      <p class="muted">Since {{.CreationDate}}</p>
+      <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+      {{if .Members}}
+      <div class="members">
+        <strong>Members:</strong>
+        <ul>{{range .Members}}<li>{{.}}</li>{{end}}</ul>
+      </div>
+      {{end}}
     </div>
-
+  </article>
+  {{end}}
+</section>
 </body>
 </html>

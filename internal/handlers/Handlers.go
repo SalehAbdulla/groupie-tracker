@@ -5,18 +5,20 @@ import (
 	"io/fs"
 	"net/http"
 
+	"groupie-tracker/internal/constants"
 	"groupie-tracker/ui"
 )
 
 type Handlers struct {
-	tpl    *template.Template
-	static fs.FS
+	tpl     *template.Template
+	static  fs.FS
+	Artists []constants.ArtistView // Exported + matches how we’ll use it
 }
 
-func New() *Handlers {
+func New(view []constants.ArtistView) *Handlers {
 	t := template.Must(template.ParseFS(ui.Files, "templates/*.html"))
 	sub, _ := fs.Sub(ui.Files, "templates")
-	return &Handlers{tpl: t, static: sub}
+	return &Handlers{tpl: t, static: sub, Artists: view}
 }
 
 func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
@@ -25,6 +27,4 @@ func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
 	}
 }
 
-func (h *Handlers) Static() fs.FS {
-	return h.static
-}
+func (h *Handlers) Static() fs.FS { return h.static }

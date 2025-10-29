@@ -3,6 +3,13 @@ package constants
 const PORT = ":5171"
 const TEMPLATES_PATH = "templates"
 
+type ArtistView struct {
+	ArtistData
+	Locs []string
+	Dts  []string
+	Rel  map[string][]string 
+}
+
 type API struct {
 	Artists   string `json:"artists"`
 	Locations string `json:"locations"`
