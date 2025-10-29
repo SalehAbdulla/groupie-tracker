@@ -1,7 +1,7 @@
 package constants
 
 const PORT = ":5171"
-const TEMPLATES_PATH = "../../../templates"
+const TEMPLATES_PATH = "templates"
 
 type ArtistData struct {
 	Id  int

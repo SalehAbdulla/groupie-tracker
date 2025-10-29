@@ -2,19 +2,29 @@ package handlers
 
 import (
 	"html/template"
+	"io/fs"
 	"net/http"
+
+	"groupie-tracker/ui"
 )
 
 type Handlers struct {
-	templatesPath string
+	tpl    *template.Template
+	static fs.FS
 }
 
-func New(templatesPath string) *Handlers {
-	return &Handlers{templatesPath: templatesPath}
+func New() *Handlers {
+	t := template.Must(template.ParseFS(ui.Files, "templates/*.html"))
+	sub, _ := fs.Sub(ui.Files, "templates")
+	return &Handlers{tpl: t, static: sub}
 }
 
 func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
-	t, err := template.ParseFiles(h.templatesPath + "/" + name)
-	if err != nil {http.Error(w, err.Error(), http.StatusInternalServerError); return}
-	_ = t.Execute(w, data)
+	if err := h.tpl.ExecuteTemplate(w, name, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (h *Handlers) Static() fs.FS {
+	return h.static
 }

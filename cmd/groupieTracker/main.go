@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	app, err := app.New(constants.PORT)
+	server, err := app.New(constants.PORT)
 	if err != nil {
 		log.Printf("failed to initialize app: %v", err)
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +19,6 @@ func main() {
 		return
 	}
 	
-	log.Printf("listening on %s", app.GetPort())
-	log.Fatal(http.ListenAndServe(app.GetPort(), app))
+	log.Printf("listening on %s", server.GetPort())
+	log.Fatal(http.ListenAndServe(server.GetPort(), server))
 }
