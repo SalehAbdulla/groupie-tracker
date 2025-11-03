@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"strings"
 
 	"groupie-tracker/internal/constants"
 	"groupie-tracker/ui"
@@ -22,6 +23,34 @@ func New(view []constants.ArtistView) *Handlers {
 }
 
 func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
+	if err := h.tpl.ExecuteTemplate(w, name, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
+	const inlinePrefix = "inline:"
+	if strings.HasPrefix(name, inlinePrefix) {
+		src := strings.TrimPrefix(name, inlinePrefix)
+
+		t, err := h.tpl.Clone()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		const inlineName = "__inline__"
+		if _, err := t.New(inlineName).Parse(src); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if err := t.ExecuteTemplate(w, inlineName, data); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
+	}
+
 	if err := h.tpl.ExecuteTemplate(w, name, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
