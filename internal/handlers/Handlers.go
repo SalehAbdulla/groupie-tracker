@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"html/template"
 	"io/fs"
 	"net/http"
@@ -11,21 +12,35 @@ import (
 )
 
 type Handlers struct {
-	tpl     *template.Template
+	base    *template.Template // never execute this one
 	static  fs.FS
-	Artists []constants.ArtistView // Exported + matches how we’ll use it
+	Artists []constants.ArtistView
 }
 
 func New(view []constants.ArtistView) *Handlers {
 	t := template.Must(template.ParseFS(ui.Files, "templates/*.html"))
 	sub, _ := fs.Sub(ui.Files, "templates")
-	return &Handlers{tpl: t, static: sub, Artists: view}
+	return &Handlers{base: t, static: sub, Artists: view}
+}
+
+func (h *Handlers) cloneBase() (*template.Template, error) {
+	return h.base.Clone() // safe because h.base is never executed
 }
 
 func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
-	if err := h.tpl.ExecuteTemplate(w, name, data); err != nil {
+	t, err := h.cloneBase()
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	var buf bytes.Buffer
+	if err := t.ExecuteTemplate(&buf, name, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	_, _ = buf.WriteTo(w)
 }
 
 func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
@@ -33,7 +48,7 @@ func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
 	if strings.HasPrefix(name, inlinePrefix) {
 		src := strings.TrimPrefix(name, inlinePrefix)
 
-		t, err := h.tpl.Clone()
+		t, err := h.cloneBase()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -45,15 +60,18 @@ func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
 			return
 		}
 
-		if err := t.ExecuteTemplate(w, inlineName, data); err != nil {
+		var buf bytes.Buffer
+		if err := t.ExecuteTemplate(&buf, inlineName, data); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_, _ = buf.WriteTo(w)
 		return
 	}
 
-	if err := h.tpl.ExecuteTemplate(w, name, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	// fall back to file-backed template by name
+	h.render(w, name, data)
 }
 
 func (h *Handlers) Static() fs.FS { return h.static }
