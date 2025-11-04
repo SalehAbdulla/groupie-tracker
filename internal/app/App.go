@@ -11,12 +11,12 @@ import (
 )
 
 type App struct {
-	port    string
-	mux     *http.ServeMux
-	view    []constants.ArtistView
-	httpc   *http.Client
-	Artists []constants.ArtistData
-	relIdx  *constants.RelationIndex
+	port         string
+	mux          *http.ServeMux
+	view         []constants.ArtistView
+	httpc        *http.Client
+	HomePageData []constants.ArtistData
+	CardPageData *constants.CardPageData
 }
 
 func New(port string) (*App, error) {
@@ -26,8 +26,8 @@ func New(port string) (*App, error) {
 		httpc: &http.Client{
 			Timeout: 12 * time.Second,
 		},
-		Artists: nil,
-		relIdx:  nil,
+		HomePageData: nil,
+		CardPageData: nil,
 	}
 
 	var wg sync.WaitGroup
@@ -37,19 +37,16 @@ func New(port string) (*App, error) {
 
 	go func() {
 		defer wg.Done()
-		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/artists", &a.Artists)
+		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/artists", &a.HomePageData)
 	}()
 
 	go func() {
 		defer wg.Done()
-		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/relation", &a.relIdx)
+		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/relation", &a.CardPageData)
 	}()
 
 	wg.Wait()
 	close(errs)
-
-	//fmt.Println(a.Artists)
-	//fmt.Println(a.relIdx)
 
 	for e := range errs {
 		if e != nil {
@@ -57,20 +54,20 @@ func New(port string) (*App, error) {
 		}
 	}
 
-	relByID := make(map[int]map[string][]string, len(a.relIdx.Index))
-	for _, x := range a.relIdx.Index {
-		relByID[x.ID] = x.DatesLocations
+	cardPageData := make(map[int]map[string][]string, len(a.CardPageData.PageData))
+	for _, data := range a.CardPageData.PageData {
+		cardPageData[data.ID] = data.DatesLocations
 	}
 
-	view := make([]constants.ArtistView, 0, len(a.Artists))
-	for _, ar := range a.Artists {
-		view = append(view, constants.ArtistView{
+	homePageDate := make([]constants.ArtistView, 0, len(a.HomePageData))
+	for _, ar := range a.HomePageData {
+		homePageDate = append(homePageDate, constants.ArtistView{
 			ArtistData: ar,
-			Rel:        relByID[ar.ID],
+			Rel:        cardPageData[ar.ID],
 		})
 	}
 
-	a.view = view
+	a.view = homePageDate
 	a.routes()
 	return a, nil
 }

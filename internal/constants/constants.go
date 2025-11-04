@@ -19,8 +19,8 @@ type ArtistData struct {
 	Relations    string   `json:"relations"`
 }
 
-type RelationIndex struct {
-	Index []RelationEntry `json:"index"`
+type CardPageData struct {
+	PageData []RelationEntry `json:"pageData"`
 }
 
 type RelationEntry struct {

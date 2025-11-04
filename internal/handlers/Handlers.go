@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
-	"strings"
 )
 
 type Handlers struct {
@@ -40,35 +39,4 @@ func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_, _ = buf.WriteTo(w)
-}
-
-func (h *Handlers) RenderStr(w http.ResponseWriter, name string, data any) {
-	const inlinePrefix = "inline:"
-	if strings.HasPrefix(name, inlinePrefix) {
-		src := strings.TrimPrefix(name, inlinePrefix)
-
-		t, err := h.cloneBase()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		const inlineName = "__inline__"
-		if _, err := t.New(inlineName).Parse(src); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		var buf bytes.Buffer
-		if err := t.ExecuteTemplate(&buf, inlineName, data); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		_, _ = buf.WriteTo(w)
-		return
-	}
-
-	// fall back to file-backed template by name
-	h.render(w, name, data)
 }
