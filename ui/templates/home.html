@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/templates/home.css" rel="stylesheet" type="text/css">
+    <title>Document</title>
 </head>
 <body>
-  <section class="grid">
-  {{range .Artists}}
-  <article class="card">
-    <img class="card-img" src="{{.Image}}" alt="{{.Name}}">
-    <div class="card-body">
-      <h2 class="card-title">{{.Name}}</h2>
-      <p class="muted">Since {{.CreationDate}}</p>
-      <p><strong>First album:</strong> {{.FirstAlbum}}</p>
-      {{if .Members}}
-      <div class="members">
-        <strong>Members:</strong>
-        <ul>{{range .Members}}<li>{{.}}</li>{{end}}</ul>
-      </div>
-      {{end}}
+<section class="grid">
+    {{range .Artists}}
+    <div class="flip-card">
+        <div class="flip-card-inner">
+
+            <article class="flip-card-front card">
+                <img class="card-img" src="{{.Image}}" alt="{{.Name}}">
+                <div class="card-body">
+                    <h2 class="card-title">{{.Name}}</h2>
+                    <p class="muted">Since {{.CreationDate}}</p>
+                </div>
+            </article>
+
+            <article class="flip-card-back card">
+                <div class="card-body">
+                    <h2 class="card-title">{{.Name}}</h2>
+                    <p class="muted">Since {{.CreationDate}}</p>
+                    <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+                    {{if .Members}}
+                    <div class="members">
+                        <strong>Members:</strong>
+                        <ul>
+                            {{range .Members}}<li>{{.}}</li>{{end}}
+                        </ul>
+                    </div>
+                    {{end}}
+                </div>
+            </article>
+        </div>
     </div>
-  </article>
-  {{end}}
+
+
+
+
+    {{end}}
 </section>
 </body>
 </html>

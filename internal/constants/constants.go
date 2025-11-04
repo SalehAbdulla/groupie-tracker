@@ -6,15 +6,7 @@ const TEMPLATES_PATH = "templates"
 type ArtistView struct {
 	ArtistData
 	Locs []string
-	Dts  []string
-	Rel  map[string][]string 
-}
-
-type API struct {
-	Artists   string `json:"artists"`
-	Locations string `json:"locations"`
-	Dates     string `json:"dates"`
-	Relation  string `json:"relation"`
+	Rel  map[string][]string
 }
 
 type ArtistData struct {
@@ -24,28 +16,7 @@ type ArtistData struct {
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
-}
-
-type LocationsIndex struct {
-	Index []LocationEntry `json:"index"`
-}
-
-type LocationEntry struct {
-	ID        int      `json:"id"`
-	Locations []string `json:"locations"`
-	Dates     string   `json:"dates"`
-}
-
-type DatesIndex struct {
-	Index []DateEntry `json:"index"`
-}
-
-type DateEntry struct {
-	ID    int      `json:"id"`
-	Dates []string `json:"dates"`
 }
 
 type RelationIndex struct {
@@ -55,4 +26,8 @@ type RelationIndex struct {
 type RelationEntry struct {
 	ID             int                 `json:"id"`
 	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
+type HomePageData struct {
+	Artists []ArtistView
 }

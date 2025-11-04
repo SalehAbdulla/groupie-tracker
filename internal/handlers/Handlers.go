@@ -2,25 +2,24 @@ package handlers
 
 import (
 	"bytes"
+	"groupie-tracker/internal/constants"
+	"groupie-tracker/ui"
 	"html/template"
 	"io/fs"
 	"net/http"
 	"strings"
-
-	"groupie-tracker/internal/constants"
-	"groupie-tracker/ui"
 )
 
 type Handlers struct {
 	base    *template.Template // never execute this one
-	static  fs.FS
+	Static  fs.FS
 	Artists []constants.ArtistView
 }
 
 func New(view []constants.ArtistView) *Handlers {
 	t := template.Must(template.ParseFS(ui.Files, "templates/*.html"))
 	sub, _ := fs.Sub(ui.Files, "templates")
-	return &Handlers{base: t, static: sub, Artists: view}
+	return &Handlers{base: t, Static: sub, Artists: view}
 }
 
 func (h *Handlers) cloneBase() (*template.Template, error) {
@@ -43,7 +42,7 @@ func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
 	_, _ = buf.WriteTo(w)
 }
 
-func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
+func (h *Handlers) RenderStr(w http.ResponseWriter, name string, data any) {
 	const inlinePrefix = "inline:"
 	if strings.HasPrefix(name, inlinePrefix) {
 		src := strings.TrimPrefix(name, inlinePrefix)
@@ -73,5 +72,3 @@ func (h *Handlers) renderStr(w http.ResponseWriter, name string, data any) {
 	// fall back to file-backed template by name
 	h.render(w, name, data)
 }
-
-func (h *Handlers) Static() fs.FS { return h.static }
