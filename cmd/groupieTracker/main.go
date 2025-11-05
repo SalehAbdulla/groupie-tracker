@@ -14,11 +14,9 @@ func main() {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		})
-		port := constants.PORT
-		log.Fatal(http.ListenAndServe(port, nil))
-		return
+		log.Fatal(http.ListenAndServe(constants.PORT, nil))
 	}
-	
+
 	log.Printf("listening on %s", server.GetPort())
 	log.Fatal(http.ListenAndServe(server.GetPort(), server))
 }
