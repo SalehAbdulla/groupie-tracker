@@ -77,6 +77,7 @@ func (a *App) GetPort() string { return a.port }
 func (a *App) routes() {
 	h := handlers.New(a.view)
 	a.mux.HandleFunc("/", h.Home)
+	a.mux.HandleFunc("/card-data", h.CardData)
 	a.mux.Handle("/templates/",
 		http.StripPrefix("/templates/", http.FileServer(http.FS(h.Static))))
 }
