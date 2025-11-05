@@ -19,15 +19,19 @@ type ArtistData struct {
 	Relations    string   `json:"relations"`
 }
 
-type CardPageData struct {
-	PageData []RelationEntry `json:"pageData"`
-}
-
-type RelationEntry struct {
+type Relation struct {
 	ID             int                 `json:"id"`
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
 type HomePageData struct {
 	Artists []ArtistView
+}
+
+type CardPageData struct {
+	PageData []Relation `json:"pageData"`
+}
+
+type Error struct {
+	Error string
 }
