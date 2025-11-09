@@ -1,34 +1,50 @@
+<!-- ui/templates/CardData.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/templates/home.css" rel="stylesheet" type="text/css">
-    <title>Document</title>
+    <title>{{.Name}} • Details</title>
 </head>
 <body>
-<section class="grid">
-    {{range .Artists}}
-    <div class="flip-card">
-        <div class="flip-card-inner">
-            <article class="flip-card-back card">
-                <div class="card-body">
-                    <h2 class="card-title">{{.Name}}</h2>
-                    <p class="muted">Since {{.CreationDate}}</p>
-                    <p><strong>First album:</strong> {{.FirstAlbum}}</p>
-                    {{if .Members}}
-                    <div class="members">
-                        <strong>Members:</strong>
-                        <ul>
-                            {{range .Members}}<li>{{.}}</li>{{end}}
-                        </ul>
-                    </div>
-                    {{end}}
-                </div>
-            </article>
+
+<main style="max-width: 960px; margin: 24px auto;">
+    
+    <article class="card" style="display:grid; grid-template-columns: 320px 1fr;">
+        <img class="card-img" src="{{.Image}}" alt="{{.Name}}" style="height:100%; object-fit:cover;">
+        <div class="card-body">
+            <h1 class="card-title">{{.Name}}</h1>
+            <p class="muted">Since {{.CreationDate}}</p>
+            <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+
+            {{if .Members}}
+            <div class="members">
+                <strong>Members:</strong>
+                <ul>
+                    {{range .Members}}<li>{{.}}</li>{{end}}
+                </ul>
+            </div>
+            {{end}}
         </div>
-    </div>
-    {{end}}
-</section>
+        {{if .Rel}}
+        <section style="margin-top: 24px;">
+            <h2>Tour dates & locations</h2>
+            <ul>
+                {{range $city, $dates := .Rel}}
+                <li>
+                    <strong>{{$city}}</strong>
+                    <ul>
+                        {{range $dates}}<li>{{.}}</li>{{end}}
+                    </ul>
+                </li>
+                {{end}}
+            </ul>
+        </section>
+        {{end}}
+
+        <p style="margin-top:24px;"><a href="/">Back to all artists</a></p>
+    </article>
+</main>
 </body>
 </html>

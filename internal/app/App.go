@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"groupie-tracker/internal/constants"
 	"groupie-tracker/internal/handlers"
 	"net/http"
@@ -54,6 +55,7 @@ func New(port string) (*App, error) {
 		}
 	}
 
+
 	cardPageData := make(map[int]map[string][]string, len(a.CardPageData.PageData))
 	for _, data := range a.CardPageData.PageData {
 		cardPageData[data.ID] = data.DatesLocations
@@ -67,6 +69,8 @@ func New(port string) (*App, error) {
 		})
 	}
 
+	fmt.Println(len(a.CardPageData.PageData))
+
 	a.view = homePageDate
 	a.routes()
 	return a, nil
@@ -75,7 +79,10 @@ func New(port string) (*App, error) {
 func (a *App) GetPort() string { return a.port }
 
 func (a *App) routes() {
-	h := handlers.New(a.view)
+	h, err := handlers.New(a.view)
+	if err != nil {
+		a.mux.HandleFunc("/", h.NotFound)
+	}
 	a.mux.HandleFunc("/", h.Home)
 	a.mux.HandleFunc("/card-data", h.CardData)
 	a.mux.Handle("/templates/",
@@ -87,8 +94,10 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		a.mux.ServeHTTP(w, r)
 		return
 	}
-	h := handlers.New(a.view)
-	h.NotFound(w, r)
+	h, err := handlers.New(a.view)
+	if err != nil {
+		h.InternalServerError(w, r)
+	}
 }
 
 func fetchJSON[T any](c *http.Client, url string, dst *T) error {

@@ -9,9 +9,8 @@
 <body>
 <section class="grid">
     {{range .Artists}}
-    <div class="flip-card">
+    <a class="flip-card" href="/card-data?id={{.ID}}" aria-label="Open {{.Name}} details">
         <div class="flip-card-inner">
-
             <article class="flip-card-front card">
                 <img class="card-img" src="{{.Image}}" alt="{{.Name}}">
                 <div class="card-body">
@@ -29,14 +28,16 @@
                     <div class="members">
                         <strong>Members:</strong>
                         <ul>
-                            {{range .Members}}<li>{{.}}</li>{{end}}
+                            {{range .Members}}
+                            <li>{{.}}</li>
+                            {{end}}
                         </ul>
                     </div>
                     {{end}}
                 </div>
             </article>
         </div>
-    </div>
+    </a>
     {{end}}
 </section>
 </body>

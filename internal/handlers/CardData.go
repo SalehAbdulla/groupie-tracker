@@ -2,21 +2,29 @@ package handlers
 
 import (
 	"groupie-tracker/internal/constants"
-	"strconv"
-
 	"net/http"
+	"strconv"
 )
 
 func (h *Handlers) CardData(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if !(id >= 1 && id <= len(h.Artists)) || err != nil {
-		h.NotFound(w, r)
-		return
-	}
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusMethodNotAllowed)})
 		return
 	}
-	h.render(w, "CardPageData.html", constants.HomePageData{Artists: h.Artists})
+
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil || id < 1 {
+		h.NotFound(w, r)
+		return
+	}
+
+	if id > len(h.Artists) || h.Artists[id-1].ID != id {
+		h.NotFound(w, r)
+		return
+	}
+
+	artist := h.Artists[id-1]
+	h.render(w, "CardData.html", artist)
 }

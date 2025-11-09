@@ -10,19 +10,22 @@ import (
 )
 
 type Handlers struct {
-	base    *template.Template // never execute this one
+	base    *template.Template 
 	Static  fs.FS
 	Artists []constants.ArtistView
 }
 
-func New(view []constants.ArtistView) *Handlers {
-	t := template.Must(template.ParseFS(ui.Files, "templates/*.html"))
+func New(view []constants.ArtistView) (*Handlers, error) {
+	t, err := template.ParseFS(ui.Files, "templates/*.html")
+	if err != nil {
+		return nil, constants.InternalServerError
+	}
 	sub, _ := fs.Sub(ui.Files, "templates")
-	return &Handlers{base: t, Static: sub, Artists: view}
+	return &Handlers{base: t, Static: sub, Artists: view}, nil
 }
 
 func (h *Handlers) cloneBase() (*template.Template, error) {
-	return h.base.Clone() // safe because h.base is never executed
+	return h.base.Clone() 
 }
 
 func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
