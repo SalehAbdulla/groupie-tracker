@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/templates/home.css" rel="stylesheet" type="text/css">
-    <title>Document</title>
-</head>
-<body>
-<section class="grid">
-    {{range .Artists}}
-    <a class="flip-card" href="/card-data?id={{.ID}}" aria-label="Open {{.Name}} details">
-        <div class="flip-card-inner">
-            <article class="flip-card-front card">
-                <img class="card-img" src="{{.Image}}" alt="{{.Name}}">
-                <div class="card-body">
-                    <h2 class="card-title">{{.Name}}</h2>
-                    <p class="muted">Since {{.CreationDate}}</p>
-                </div>
-            </article>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Groupie Tracker</title>
 
-            <article class="flip-card-back card">
-                <div class="card-body">
-                    <h2 class="card-title">{{.Name}}</h2>
-                    <p class="muted">Since {{.CreationDate}}</p>
-                    <p><strong>First album:</strong> {{.FirstAlbum}}</p>
-                    {{if .Members}}
-                    <div class="members">
-                        <strong>Members:</strong>
-                        <ul>
-                            {{range .Members}}
-                            <li>{{.}}</li>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Prata&display=swap"
+            rel="stylesheet" />
+            
+        <link rel="stylesheet" href="/templates/home.css" />
+
+    </head>
+    <body>
+        <header>
+            <h1 class="prata-regular">Groupie Tracker</h1>
+            <p>Explore your favorite bands and their tour dates</p>
+            <div class="line"></div>
+        </header>
+
+        <main class="grid">
+            {{range .Artists}}
+            <a
+                class="flip-card"
+                href="/card-data?id={{.ID}}"
+                aria-label="Open {{.Name}} details">
+                <div class="flip-card-inner">
+                    <article class="flip-card-front card">
+                        <img src="{{.Image}}" alt="{{.Name}}"
+                            class="card-img" />
+                        <div class="card-body">
+                            <h2 class="card-title">{{.Name}}</h2>
+                            <p class="muted">Since {{.CreationDate}}</p>
+                        </div>
+                    </article>
+
+                    <article class="flip-card-back card">
+                        <div class="card-body">
+                            <h2 class="card-title">{{.Name}}</h2>
+                            <p class="muted">Since {{.CreationDate}}</p>
+                            <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+
+                            {{if .Members}}
+                            <div class="members">
+                                <h3>Members:</h3>
+                                <ul>
+                                    {{range .Members}}<li>{{.}}</li>{{end}}
+                                </ul>
+                            </div>
                             {{end}}
-                        </ul>
-                    </div>
-                    {{end}}
+                        </div>
+                    </article>
                 </div>
-            </article>
-        </div>
-    </a>
-    {{end}}
-</section>
-</body>
+            </a>
+            {{end}}
+        </main>
+    </body>
 </html>

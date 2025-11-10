@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/templates/home.css">
-    <title>Error</title>
-</head>
-<body class="error">
-    <main>
-        {{if .Error}}
-        <div class="prata-regular">{{.Error}}</div>
-        {{end}}
-    </main>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/templates/home.css">
+        <title>Error</title>
+    </head>
+    <body>
+        <header>
+            <h1>Oops!</h1>
+        </header>
+        <main class="error-page">
+            {{if .Error}}
+            <div class="error-message">{{.Error}}</div>
+            {{else}}
+            <div class="error-message">Something went wrong.</div>
+            {{end}}
+            <p class="back-link"><a href="/">Back to all artists</a></p>
+        </main>
+    </body>
 </html>

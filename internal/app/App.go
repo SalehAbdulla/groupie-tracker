@@ -60,6 +60,9 @@ func New(port string) (*App, error) {
 			Rel:        relationMap[artist.ID],
 		}
 	}
+
+	views[20].Image = "https://picsum.photos/200/300"
+
 	a.view = views
 
 	a.routes()

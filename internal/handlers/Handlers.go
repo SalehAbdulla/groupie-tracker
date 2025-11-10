@@ -18,7 +18,7 @@ type Handlers struct {
 func New(view []constants.ArtistView) (*Handlers, error) {
 	t, err := template.ParseFS(ui.Files, "templates/*.html")
 	if err != nil {
-		return nil, constants.InternalServerError
+		return nil, constants.ErrInternalServer
 	}
 	sub, _ := fs.Sub(ui.Files, "templates")
 	return &Handlers{base: t, Static: sub, Artists: view}, nil

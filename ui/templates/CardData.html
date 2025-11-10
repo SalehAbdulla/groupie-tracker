@@ -1,50 +1,60 @@
-<!-- ui/templates/CardData.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/templates/home.css" rel="stylesheet" type="text/css">
-    <title>{{.Name}} • Details</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{{.Name}} • Details</title>
+        <link rel="stylesheet" href="/templates/home.css" />
+    </head>
+    <body>
+        <header>
+            <h1 class="prata-regular">{{.Name}}</h1>
+            <p>Band details & tour dates</p>
+            <div class="line"></div>
+        </header>
 
-<main style="max-width: 960px; margin: 24px auto;">
-    
-    <article class="card" style="display:grid; grid-template-columns: 320px 1fr;">
-        <img class="card-img" src="{{.Image}}" alt="{{.Name}}" style="height:100%; object-fit:cover;">
-        <div class="card-body">
-            <h1 class="card-title">{{.Name}}</h1>
-            <p class="muted">Since {{.CreationDate}}</p>
-            <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+        <main class="details">
+            <section class="artist-card">
+                <img src="{{.Image}}" alt="{{.Name}}" class="card-img" />
 
-            {{if .Members}}
-            <div class="members">
-                <strong>Members:</strong>
+                <div class="card-info">
+                    <p><strong>Since:</strong> {{.CreationDate}}</p>
+                    <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+
+                    {{if .Members}}
+                    <div class="members">
+                        <h3>Members</h3>
+                        <ul>
+                            {{range .Members}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </div>
+                    {{end}}
+                </div>
+            </section>
+
+            {{if .Rel}}
+            <section class="tour">
+                <h2>Tour Dates & Locations</h2>
                 <ul>
-                    {{range .Members}}<li>{{.}}</li>{{end}}
+                    {{range $city, $dates := .Rel}}
+                    <li>
+                        <strong>{{$city}}</strong>
+                        <ul>
+                            {{range $dates}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </li>
+                    {{end}}
                 </ul>
-            </div>
+            </section>
             {{end}}
-        </div>
-        {{if .Rel}}
-        <section style="margin-top: 24px;">
-            <h2>Tour dates & locations</h2>
-            <ul>
-                {{range $city, $dates := .Rel}}
-                <li>
-                    <strong>{{$city}}</strong>
-                    <ul>
-                        {{range $dates}}<li>{{.}}</li>{{end}}
-                    </ul>
-                </li>
-                {{end}}
-            </ul>
-        </section>
-        {{end}}
 
-        <p style="margin-top:24px;"><a href="/">Back to all artists</a></p>
-    </article>
-</main>
-</body>
+            <p class="back-link">
+                <a href="/">← Back to all artists</a>
+            </p>
+        </main>
+    </body>
 </html>

@@ -8,8 +8,8 @@ import (
 const PORT = ":5171"
 
 var (
-	InternalServerError = errors.New(http.StatusText(http.StatusInternalServerError))
-	NotFoundPage        = errors.New(http.StatusText(http.StatusNotFound))
+	ErrInternalServer = errors.New(http.StatusText(http.StatusInternalServerError))
+	ErrNotFound       = errors.New(http.StatusText(http.StatusNotFound))
 )
 
 type ArtistView struct {
