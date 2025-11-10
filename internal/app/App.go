@@ -12,66 +12,56 @@ import (
 )
 
 type App struct {
-	port         string
-	mux          *http.ServeMux
-	view         []constants.ArtistView
-	httpc        *http.Client
-	HomePageData []constants.ArtistData
-	CardPageData *constants.CardPageData
+	port string
+	mux  *http.ServeMux
+	view []constants.ArtistView
 }
 
 func New(port string) (*App, error) {
 	a := &App{
 		port: port,
 		mux:  http.NewServeMux(),
-		httpc: &http.Client{
-			Timeout: 12 * time.Second,
-		},
-		HomePageData: nil,
-		CardPageData: nil,
 	}
 
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	var artists []constants.ArtistData
+	var relations constants.CardPageData
 	var wg sync.WaitGroup
-	errs := make(chan error, 2)
+	var errA, errR error
 
 	wg.Add(2)
 
 	go func() {
 		defer wg.Done()
-		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/artists", &a.HomePageData)
+		errA = fetchJSON(client, "https://groupietrackers.herokuapp.com/api/artists", &artists)
 	}()
 
 	go func() {
 		defer wg.Done()
-		errs <- fetchJSON(a.httpc, "https://groupietrackers.herokuapp.com/api/relation", &a.CardPageData)
+		errR = fetchJSON(client, "https://groupietrackers.herokuapp.com/api/relation", &relations)
 	}()
 
 	wg.Wait()
-	close(errs)
+	if errA != nil || errR != nil {
+		return nil, fmt.Errorf("fetch failed: %v %v", errA, errR)
+	}
 
-	for e := range errs {
-		if e != nil {
-			return nil, e
+	// Merge artist + relation data
+	relationMap := make(map[int]map[string][]string)
+	for _, rel := range relations.Index {
+		relationMap[rel.ID] = rel.DatesLocations
+	}
+
+	views := make([]constants.ArtistView, len(artists))
+	for i, artist := range artists {
+		views[i] = constants.ArtistView{
+			ArtistData: artist,
+			Rel:        relationMap[artist.ID],
 		}
 	}
+	a.view = views
 
-
-	cardPageData := make(map[int]map[string][]string, len(a.CardPageData.PageData))
-	for _, data := range a.CardPageData.PageData {
-		cardPageData[data.ID] = data.DatesLocations
-	}
-
-	homePageDate := make([]constants.ArtistView, 0, len(a.HomePageData))
-	for _, ar := range a.HomePageData {
-		homePageDate = append(homePageDate, constants.ArtistView{
-			ArtistData: ar,
-			Rel:        cardPageData[ar.ID],
-		})
-	}
-
-	fmt.Println(len(a.CardPageData.PageData))
-
-	a.view = homePageDate
 	a.routes()
 	return a, nil
 }
@@ -79,10 +69,8 @@ func New(port string) (*App, error) {
 func (a *App) GetPort() string { return a.port }
 
 func (a *App) routes() {
-	h, err := handlers.New(a.view)
-	if err != nil {
-		a.mux.HandleFunc("/", h.NotFound)
-	}
+	h, err  := handlers.New(a.view)
+	if err != nil {a.mux.HandleFunc("/", h.InternalServerError)}
 	a.mux.HandleFunc("/", h.Home)
 	a.mux.HandleFunc("/card-data", h.CardData)
 	a.mux.Handle("/templates/",
@@ -90,14 +78,7 @@ func (a *App) routes() {
 }
 
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if _, pattern := a.mux.Handler(r); pattern != "" {
-		a.mux.ServeHTTP(w, r)
-		return
-	}
-	h, err := handlers.New(a.view)
-	if err != nil {
-		h.InternalServerError(w, r)
-	}
+	a.mux.ServeHTTP(w, r)
 }
 
 func fetchJSON[T any](c *http.Client, url string, dst *T) error {

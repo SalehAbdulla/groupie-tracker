@@ -11,11 +11,6 @@ func (h *Handlers) Home(w http.ResponseWriter, r *http.Request) {
 		h.NotFound(w, r)
 		return
 	}
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusMethodNotAllowed)})
-		return
-	}
 	h.render(w, "home.html", constants.HomePageData{Artists: h.Artists})
 }
 

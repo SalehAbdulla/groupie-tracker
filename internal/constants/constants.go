@@ -6,17 +6,15 @@ import (
 )
 
 const PORT = ":5171"
-const TEMPLATES_PATH = "templates"
 
 var (
 	InternalServerError = errors.New(http.StatusText(http.StatusInternalServerError))
-	NotFoundPage = errors.New(http.StatusText(http.StatusNotFound))
+	NotFoundPage        = errors.New(http.StatusText(http.StatusNotFound))
 )
 
 type ArtistView struct {
 	ArtistData
-	Locs []string
-	Rel  map[string][]string
+	Rel map[string][]string
 }
 
 type ArtistData struct {
@@ -29,30 +27,19 @@ type ArtistData struct {
 	Relations    string   `json:"relations"`
 }
 
-type Relation struct {
+type IndexItem struct {
 	ID             int                 `json:"id"`
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
-type HomePageData struct {
-	Artists []ArtistView
-}
-
 type CardPageData struct {
-	PageData []Relation `json:"pageData"`
+	Index []IndexItem `json:"index"`
 }
 
 type Error struct {
 	Error string
 }
 
-type DateLocations map[string][]string
-
-type IndexItem struct {
-	ID             int             `json:"id"`
-	DatesLocations DateLocations   `json:"datesLocations"`
-}
-
-type ArtistIndex struct {
-	Index []IndexItem `json:"index"`
+type HomePageData struct {
+	Artists []ArtistView
 }
