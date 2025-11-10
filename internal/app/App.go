@@ -47,7 +47,6 @@ func New(port string) (*App, error) {
 		return nil, fmt.Errorf("fetch failed: %v %v", errA, errR)
 	}
 
-	// Merge artist + relation data
 	relationMap := make(map[int]map[string][]string)
 	for _, rel := range relations.Index {
 		relationMap[rel.ID] = rel.DatesLocations

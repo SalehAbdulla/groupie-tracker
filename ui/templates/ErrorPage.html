@@ -9,13 +9,15 @@
     <body>
         <header>
             <h1>Oops!</h1>
+            {{if .Error}}
+            <h1>{{.Error}}!</h1>
+            {{else}}
+                <h1 class="error-message">Something went wrong.</h1>
+            {{end}}
+
         </header>
         <main class="error-page">
-            {{if .Error}}
-            <div class="error-message">{{.Error}}</div>
-            {{else}}
-            <div class="error-message">Something went wrong.</div>
-            {{end}}
+            <div class="error-message"></div>
             <p class="back-link"><a href="/">Back to all artists</a></p>
         </main>
     </body>
