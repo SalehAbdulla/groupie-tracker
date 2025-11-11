@@ -10,7 +10,7 @@ import (
 )
 
 type Handlers struct {
-	base    *template.Template 
+	base    *template.Template
 	Static  fs.FS
 	Artists []constants.ArtistView
 }
@@ -25,19 +25,19 @@ func New(view []constants.ArtistView) (*Handlers, error) {
 }
 
 func (h *Handlers) cloneBase() (*template.Template, error) {
-	return h.base.Clone() 
+	return h.base.Clone()
 }
 
-func (h *Handlers) render(w http.ResponseWriter, name string, data any) {
+func (h *Handlers) Render(w http.ResponseWriter, r *http.Request, name string, data any) {
 	t, err := h.cloneBase()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		h.InternalServerError(w, r)
 		return
 	}
 
 	var buf bytes.Buffer
 	if err := t.ExecuteTemplate(&buf, name, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		h.InternalServerError(w, r)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

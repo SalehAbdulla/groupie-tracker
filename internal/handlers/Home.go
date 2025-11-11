@@ -11,25 +11,25 @@ func (h *Handlers) Home(w http.ResponseWriter, r *http.Request) {
 		h.NotFound(w, r)
 		return
 	}
-	h.render(w, "home.html", constants.HomePageData{Artists: h.Artists})
+	h.Render(w, r, "home.html", constants.HomePageData{Artists: h.Artists})
 }
 
 func (h *Handlers) NotFound(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusNotFound)})
+	h.Render(w, r, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusNotFound)})
 }
 
 func (h *Handlers) BadRequest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
-	h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusBadRequest)})
+	h.Render(w, r, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusBadRequest)})
 }
 
 func (h *Handlers) InternalServerError(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusInternalServerError)
-	h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusInternalServerError)})
+	h.Render(w, r, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusInternalServerError)})
 }
 
 func (h *Handlers) MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusMethodNotAllowed)
-	h.render(w, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusMethodNotAllowed)})
+	h.Render(w, r, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusMethodNotAllowed)})
 }

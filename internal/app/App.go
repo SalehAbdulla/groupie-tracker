@@ -3,9 +3,9 @@ package app
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"groupie-tracker/internal/constants"
 	"groupie-tracker/internal/handlers"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -28,7 +28,7 @@ func New(port string) (*App, error) {
 	var artists []constants.ArtistData
 	var relations constants.CardPageData
 	var wg sync.WaitGroup
-	var errA, errR error
+	var errA, errB error
 
 	wg.Add(2)
 
@@ -39,12 +39,12 @@ func New(port string) (*App, error) {
 
 	go func() {
 		defer wg.Done()
-		errR = fetchJSON(client, "https://groupietrackers.herokuapp.com/api/relation", &relations)
+		errB = fetchJSON(client, "https://groupietrackers.herokuapp.com/api/relation", &relations)
 	}()
 
 	wg.Wait()
-	if errA != nil || errR != nil {
-		return nil, fmt.Errorf("fetch failed: %v %v", errA, errR)
+	if errA != nil || errB != nil {
+		log.Fatal("Error", errA, errB)
 	}
 
 	relationMap := make(map[int]map[string][]string)
@@ -71,12 +71,13 @@ func New(port string) (*App, error) {
 func (a *App) GetPort() string { return a.port }
 
 func (a *App) routes() {
-	h, err  := handlers.New(a.view)
-	if err != nil {a.mux.HandleFunc("/", h.InternalServerError)}
+	h, err := handlers.New(a.view)
+	if err != nil {
+		a.mux.HandleFunc("/", h.InternalServerError)
+	}
 	a.mux.HandleFunc("/", h.Home)
 	a.mux.HandleFunc("/card-data", h.CardData)
-	a.mux.Handle("/templates/",
-		http.StripPrefix("/templates/", http.FileServer(http.FS(h.Static))))
+	a.mux.Handle("/templates/", http.StripPrefix("/templates/", http.FileServer(http.FS(h.Static))))
 }
 
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {

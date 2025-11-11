@@ -16,5 +16,5 @@ func (h *Handlers) CardData(w http.ResponseWriter, r *http.Request) {
 		h.NotFound(w, r)
 		return
 	}
-	h.render(w, "CardData.html", h.Artists[id-1])
+	h.Render(w, r, "CardData.html", h.Artists[id-1])
 }
