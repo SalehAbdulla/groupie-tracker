@@ -5,7 +5,6 @@ import (
 	"errors"
 	"groupie-tracker/internal/constants"
 	"groupie-tracker/internal/handlers"
-	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -44,7 +43,15 @@ func New(port string) (*App, error) {
 
 	wg.Wait()
 	if errA != nil || errB != nil {
-		log.Fatal("Error", errA, errB)
+		h, err := handlers.New(nil) 
+		if err != nil {
+			a.mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			})
+			return a, nil
+		}
+		a.mux.HandleFunc("/", h.InternalServerError)
+		return a, nil
 	}
 
 	relationMap := make(map[int]map[string][]string)
