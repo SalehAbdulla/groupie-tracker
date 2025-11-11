@@ -26,16 +26,16 @@
                 href="/card-data?id={{.ID}}"
                 aria-label="Open {{.Name}} details">
                 <div class="flip-card-inner">
-                    <article class="flip-card-front card">
+                    <section class="flip-card-front card">
                         <img src="{{.Image}}" alt="{{.Name}}"
                             class="card-img" />
                         <div class="card-body">
                             <h2 class="card-title">{{.Name}}</h2>
-                            <p class="muted">CreationDate {{.CreationDate}}</p>
+                            <p class="muted">Creation Date {{.CreationDate}}</p>
                         </div>
-                    </article>
+                    </section>
 
-                    <article class="flip-card-back card">
+                    <section class="flip-card-back card">
                         <div class="card-body">
                             <h2 class="card-title">{{.Name}}</h2>
                             <p class="muted">Since {{.CreationDate}}</p>
@@ -50,7 +50,7 @@
                             </div>
                             {{end}}
                         </div>
-                    </article>
+                    </section>
                 </div>
             </a>
             {{end}}

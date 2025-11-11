@@ -18,8 +18,8 @@
                 <img src="{{.Image}}" alt="{{.Name}}" class="card-img" />
 
                 <div class="card-info">
-                    <p><strong>creationDate:</strong> {{.CreationDate}}</p>
-                    <p><strong>First album:</strong> {{.FirstAlbum}}</p>
+                    <p><h3>Creation Date:</h3> {{.CreationDate}}</p>
+                    <p><h3>First album:</h3> {{.FirstAlbum}}</p>
 
                     {{if .Members}}
                     <div class="members">
@@ -40,7 +40,7 @@
                 <ul>
                     {{range $city, $dates := .Rel}}
                     <li>
-                        <strong>{{$city}}</strong>
+                        <h3>{{$city}}</h3>
                         <ul>
                             {{range $dates}}
                             <li>{{.}}</li>
