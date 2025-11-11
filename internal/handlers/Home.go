@@ -25,8 +25,9 @@ func (h *Handlers) BadRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) InternalServerError(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusInternalServerError)
-	h.Render(w, r, "ErrorPage.html", constants.Error{Error: http.StatusText(http.StatusInternalServerError)})
+	_, _ = w.Write([]byte("500 internal server error"))
 }
 
 func (h *Handlers) MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
