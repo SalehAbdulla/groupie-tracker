@@ -43,7 +43,7 @@ func New(port string) (*App, error) {
 
 	wg.Wait()
 	if errA != nil || errB != nil {
-		h, err := handlers.New(nil) 
+		h, err := handlers.New(nil)
 		if err != nil {
 			a.mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -67,7 +67,9 @@ func New(port string) (*App, error) {
 		}
 	}
 
-	views[20].Image = "https://picsum.photos/200/300"
+	if len(views) > 20 {
+		views[20].Image = "https://picsum.photos/200/300"
+	}
 
 	a.view = views
 
