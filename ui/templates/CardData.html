@@ -39,14 +39,7 @@
                 <h2>Tour Dates & Locations</h2>
                 <ul>
                     {{range $city, $dates := .Rel}}
-                    <li>
-                        <h3>{{$city}}</h3>
-                        <ul>
-                            {{range $dates}}
-                            <li>{{.}}</li>
-                            {{end}}
-                        </ul>
-                    </li>
+                    <li><b>{{$city}}</b> - {{range $dates}}{{.}} {{end}}</li>
                     {{end}}
                 </ul>
             </section>

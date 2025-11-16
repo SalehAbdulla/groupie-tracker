@@ -8,15 +8,15 @@
 }
 
 :root {
-  --text-dark: #364153;
-  --text-muted: #666;
-  --bg-light: #f9f9f9;
-  --bg-white: #fff;
-  --accent: #4a5565;
+  --text-dark: #fff;
+  --text-muted: #f9f9f9;
+  --bg-light: #36373e;
+  --bg-white: #364153;
+  --accent: #f9f9f9;
 }
 
 body {
-  font-family: "Outfit", sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: var(--bg-light);
   color: var(--text-dark);
   line-height: 1.6;
@@ -24,7 +24,7 @@ body {
 }
 
 .prata-regular {
-  font-family: "Prata", serif;
+  font-family: 'Prata', serif;
 }
 
 /* ==============================
@@ -43,7 +43,7 @@ header h1 {
 
 header p {
   font-size: clamp(1.1rem, 2vw, 1.5rem);
-  color: #252729;
+  color: #fff;
   margin-bottom: 1.5rem;
 }
 
@@ -272,8 +272,7 @@ header p {
 }
 
 .tour ul {
-  list-style: none;
-  padding-left: 0;
+  padding-left: 4em;
 }
 
 .tour > ul > li {
@@ -302,14 +301,14 @@ header p {
 }
 
 .back-link a {
-  color: #000000;
+  color: #ccc;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .back-link a:hover {
-  color: #000000;
+  color: #fff;
 }
 
 /* ==============================
